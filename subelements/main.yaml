@@ -1,0 +1,23 @@
+---
+-
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: no
+  vars:
+    host_local_users:
+      - name: user1
+        pubkeys:
+        - 'ssh-rsa blablabla1 test1@pc1'
+        - 'ssh-rsa blablabla2 test1@pc2'
+      - name: user2
+        pubkeys:
+        - 'ssh-rsa blablabla3 test2@home'
+  tasks:
+    - name: Add public keys to authorized_hosts
+      authorized_key:
+          user: "{{ item.0.name }}"
+          state: "{{ item.0.state | default('present') }}"
+          key: "{{ item.1 }}"
+      loop: "{{ host_local_users | subelements('pubkeys', 'skip_missing=True') }}"   
+...

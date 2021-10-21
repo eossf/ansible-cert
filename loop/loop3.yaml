@@ -1,0 +1,18 @@
+---
+-
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: no
+  vars:
+  tasks:
+    - name: Register loop output as a variable
+      ansible.builtin.shell: "echo {{ item }}"
+      loop:
+        - "one"
+        - "two"
+      register: theecho
+    - name: Debug
+      ansible.builtin.debug:
+        msg: " {{ theecho.results }} " 
+...

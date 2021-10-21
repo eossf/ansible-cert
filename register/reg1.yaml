@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  connection: local
+  become: true
+  gather_facts: yes
+  tasks:
+    - name: Exploring register
+      ansible.builtin.command: hostname -s
+      when: 
+        - ansible_distribution == "Ubuntu"
+      register: command_register
+
+    - name: Debug register
+      ansible.builtin.debug:
+        msg: " command register = {{ command_register }}"
+
+    - name: Install patch when changed
+      ansible.builtin.apt:
+        name: patch
+        state: present
+      when: command_register.changed        
+...

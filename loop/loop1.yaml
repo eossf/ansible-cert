@@ -1,0 +1,16 @@
+---
+-
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: no
+  vars:
+    list_of_packages:
+      - ziptool
+  tasks:
+    - name: apt check 
+      ansible.builtin.apt:
+        name: "{{  list_of_packages  }}"
+        state: absent
+      check_mode: on
+...
